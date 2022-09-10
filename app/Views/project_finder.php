@@ -496,6 +496,12 @@
                     <div class="col-lg-12 col-xlg-12 col-md-12">
                         <pre>
                             <?php echo "Project Data: " . print_r($project_data, true); ?>
+
+                            <?= site_url() ?>
+
+                            <?= site_url("test") ?>
+
+                            <?= base_url() ?>
                         </pre>
                     </div>
                 </div>
@@ -544,7 +550,7 @@
     <!--Custom JavaScript -->
     <script src="<?= base_url() ?>/public/js/custom.min.js"></script>
     <!--PHP Project Finder JavaScript -->
-    <script src="<?= base_url() ?>/public/js/projectFinder.js"></script>    <!-- ============================================================== -->
+    <script src="<?= base_url() ?>/public/js/ProjectFinder.js"></script>    <!-- ============================================================== -->
     <!-- This page plugins -->
     <!-- ============================================================== -->
     <!-- chartist chart -->
@@ -555,6 +561,25 @@
     <script src="<?= base_url() ?>/public/assets/plugins/c3-master/c3.min.js"></script>-->
     <!-- Chart JS -->
     <!--<script src="<?= base_url() ?>/public/js/dashboard1.js"></script>-->
+    
+    <script type="text/javascript">
+        $(document).ready(function (){
+            
+            console.log("jQuery is loaded!");
+            
+            ProjectFinder.baseUrl = "<?= site_url() ?>";
+            ProjectFinder.csrfHash = "<?= csrf_hash() ?>";
+            ProjectFinder.csrfToken = "<?= csrf_token() ?>";
+            
+            console.log("ProjectFinder.csrfHash", ProjectFinder.csrfHash);
+            console.log("ProjectFinder.csrfToken", ProjectFinder.csrfToken);
+            
+            ProjectFinder.initialize();
+            
+            
+            
+        });
+    </script>
 </body>
 
 </html>

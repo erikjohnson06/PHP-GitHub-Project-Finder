@@ -36,6 +36,11 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+//$routes->get('/', 'ProjectFinderJS::index');
+$routes->post('ProjectFinderJS/test', 'ProjectFinderJS::test');
+$routes->get('ProjectFinderJS/getProjectListData', 'ProjectFinderJS::getProjectList');
+
+//$routes->match(['get', 'post'], '/ajax-test', 'ProjectFinderJS::test');
 
 /*
  * --------------------------------------------------------------------

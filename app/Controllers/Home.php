@@ -2,19 +2,15 @@
 
 namespace App\Controllers;
 
+use App\Models\ProjectFinderModel;
+
 class Home extends BaseController
-{
-    public function __construct()
-    {
-        //parent::__construct();
-        
-        
-    }            
+{       
     
     public function index()
     {
         
-        $model = model(ProjectModel::class);
+        $model = model(ProjectFinderModel::class);
         
         $data = ['project_data' => $model->getProjectList()];
         

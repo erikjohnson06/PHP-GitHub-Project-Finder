@@ -1,0 +1,128 @@
+ERROR - 2022-09-10 11:19:06 --> calling upsertProjectRecords...
+ERROR - 2022-09-10 11:19:06 --> upsertProjectRecords...
+ERROR - 2022-09-10 11:19:06 --> Array
+(
+    [0] => App\Libraries\GitHubRepositoryRecord Object
+        (
+            [repository_id] => 333
+            [stars] => 0
+            [name] => 
+            [url] => 
+            [description] => 
+            [date_created] => 
+            [last_updated] => 
+        )
+
+)
+
+ERROR - 2022-09-10 11:19:06 --> INSERT INTO github_projects  (repository_id, name, url, description, stars, date_created, last_updated)  repository_id, name FROM github_projects ORDER BY stars ASC
+CRITICAL - 2022-09-10 11:19:06 --> Call to protected method CodeIgniter\Database\MySQLi\Connection::execute() from scope App\Models\ProjectFinderModel
+in APPPATH\Models\ProjectFinderModel.php on line 145.
+ 1 APPPATH\Controllers\ProjectFinderJS.php(39): App\Models\ProjectFinderModel->upsertProjectRecords()
+ 2 SYSTEMPATH\CodeIgniter.php(907): App\Controllers\ProjectFinderJS->test()
+ 3 SYSTEMPATH\CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ProjectFinderJS))
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+ERROR - 2022-09-10 11:21:16 --> calling upsertProjectRecords...
+ERROR - 2022-09-10 11:21:16 --> upsertProjectRecords...
+ERROR - 2022-09-10 11:21:16 --> Array
+(
+    [0] => App\Libraries\GitHubRepositoryRecord Object
+        (
+            [repository_id] => 333
+            [stars] => 0
+            [name] => 
+            [url] => 
+            [description] => 
+            [date_created] => 
+            [last_updated] => 
+        )
+
+)
+
+ERROR - 2022-09-10 11:21:16 --> INSERT INTO github_projects  (repository_id, name, url, description, stars, date_created, last_updated)  repository_id, name FROM github_projects ORDER BY stars ASC
+ERROR - 2022-09-10 11:21:16 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'repository_id, name FROM github_projects ORDER BY stars ASC' at line 1 in C:\wamp64\www\project_finder\system\Database\MySQLi\Connection.php:292
+Stack trace:
+#0 C:\wamp64\www\project_finder\system\Database\MySQLi\Connection.php(292): mysqli->query('INSERT INTO git...', 0)
+#1 C:\wamp64\www\project_finder\system\Database\BaseConnection.php(693): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO git...')
+#2 C:\wamp64\www\project_finder\system\Database\BaseConnection.php(620): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO git...')
+#3 C:\wamp64\www\project_finder\app\Models\ProjectFinderModel.php(145): CodeIgniter\Database\BaseConnection->query('INSERT INTO git...')
+#4 C:\wamp64\www\project_finder\app\Controllers\ProjectFinderJS.php(39): App\Models\ProjectFinderModel->upsertProjectRecords()
+#5 C:\wamp64\www\project_finder\system\CodeIgniter.php(907): App\Controllers\ProjectFinderJS->test()
+#6 C:\wamp64\www\project_finder\system\CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ProjectFinderJS))
+#7 C:\wamp64\www\project_finder\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\wamp64\www\project_finder\index.php(67): CodeIgniter\CodeIgniter->run()
+#9 {main}
+ERROR - 2022-09-10 11:21:16 --> You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'repository_id, name FROM github_projects ORDER BY stars ASC' at line 1
+ERROR - 2022-09-10 11:22:16 --> calling upsertProjectRecords...
+ERROR - 2022-09-10 11:22:16 --> upsertProjectRecords...
+ERROR - 2022-09-10 11:22:16 --> Array
+(
+    [0] => App\Libraries\GitHubRepositoryRecord Object
+        (
+            [repository_id] => 333
+            [stars] => 0
+            [name] => 
+            [url] => 
+            [description] => 
+            [date_created] => 
+            [last_updated] => 
+        )
+
+)
+
+ERROR - 2022-09-10 11:22:16 --> INSERT INTO github_projects  (repository_id, name, url, description, stars, date_created, last_updated)  VALUES ('333', '', '', '', '0', '', '')  ON DUPLICATE KEY UPDATE  name = '',  url = '',  description = '',  stars = '0',  last_updated = ''
+ERROR - 2022-09-10 11:22:44 --> calling upsertProjectRecords...
+ERROR - 2022-09-10 11:22:44 --> upsertProjectRecords...
+ERROR - 2022-09-10 11:22:44 --> Array
+(
+    [0] => App\Libraries\GitHubRepositoryRecord Object
+        (
+            [repository_id] => 333
+            [stars] => 0
+            [name] => 
+            [url] => 
+            [description] => 
+            [date_created] => 
+            [last_updated] => 
+        )
+
+)
+
+ERROR - 2022-09-10 11:22:44 --> INSERT INTO github_projects  (repository_id, name, url, description, stars, date_created, last_updated)  VALUES ('333', '', '', '', '0', '', '')  ON DUPLICATE KEY UPDATE  name = '',  url = '',  description = '',  stars = '0',  last_updated = ''
+ERROR - 2022-09-10 11:23:15 --> calling upsertProjectRecords...
+ERROR - 2022-09-10 11:23:15 --> upsertProjectRecords...
+ERROR - 2022-09-10 11:23:15 --> Array
+(
+    [0] => App\Libraries\GitHubRepositoryRecord Object
+        (
+            [repository_id] => 333
+            [stars] => 0
+            [name] => Test 3
+            [url] => 
+            [description] => 
+            [date_created] => 
+            [last_updated] => 
+        )
+
+)
+
+ERROR - 2022-09-10 11:23:15 --> INSERT INTO github_projects  (repository_id, name, url, description, stars, date_created, last_updated)  VALUES ('333', 'Test 3', '', '', '0', '', '')  ON DUPLICATE KEY UPDATE  name = 'Test 3',  url = '',  description = '',  stars = '0',  last_updated = ''
+ERROR - 2022-09-10 11:25:28 --> calling upsertProjectRecords...
+ERROR - 2022-09-10 11:25:28 --> upsertProjectRecords...
+ERROR - 2022-09-10 11:25:28 --> Array
+(
+    [0] => App\Libraries\GitHubRepositoryRecord Object
+        (
+            [repository_id] => 333
+            [stars] => 0
+            [name] => Test 3
+            [url] => 
+            [description] => 
+            [date_created] => 
+            [last_updated] => 
+        )
+
+)
+
+ERROR - 2022-09-10 11:25:28 --> INSERT INTO github_projects  (repository_id, name, url, description, stars, date_created, last_updated)  VALUES ('333', 'Test 3', '', '', '0', '', '')  ON DUPLICATE KEY UPDATE  name = 'Test 3',  url = '',  description = '',  stars = '0',  last_updated = ''
