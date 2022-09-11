@@ -1,10 +1,10 @@
 
-/*
-div#projectListContainer hr {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-*/
+/****************************
+ *                          *
+ *  PHP Project Finder CSS  *
+ *                          *
+ ****************************/
+
 table#projectListResults thead th,
 table#projectListResults tbody td {
     text-align: center;
@@ -18,4 +18,52 @@ table tbody tr td.empty-table {
     background-color: #eee;
     padding: 10px;
     text-align: center;
+}
+
+div#project_detail_modal .modal-header span.modal-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+div#project_detail_modal .modal-header a.close {
+    font-size: 1rem;
+}
+
+div#project_detail_modal .modal-body {
+    padding: 0px 15px;
+}
+
+div#project_detail_modal .modal-body table td.noWrap {
+    white-space: nowrap;
+}
+
+div.page-titles span#launch_update_request {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+div.modal_overlay {
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    height: 98%;
+    width: 100%;
+    z-index: 10001;
+    text-align: center;
+    background: #FFF; /* fallback */
+    background: rgba(255,255,255,0.75);
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
 }

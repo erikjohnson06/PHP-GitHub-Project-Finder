@@ -26,7 +26,7 @@
         /**
          * @type Array
          */
-        projectListData : [],
+        //projectListData : [],
         
         initialize : function(){
                         
@@ -66,32 +66,26 @@
                     //jQuery('div.overlay').fadeOut('fast');
                     self.initialLoadComplete = true;
                 },
-                success : function (result){
+                success : function (results){
                     
-                    console.log(result);
+                    console.log(results);
 
-                    if (result.error){
+                    //Update CSRF token
+                    if (results && results.data.token){
+                        self.csrfHash = results.data.token;
+                    }
+
+                    if (results.error){
                         
                         return false;
                     }
 
-                    self.projectListData = result.data.project_data;
+                    //self.projectListData = results.data.project_data;
 
-                    if (self.projectListData){
+                    if (results.data.project_data){
                         
-                        buildProjectListTable(self.projectListData); //table#projectListResults
+                        buildProjectListTable(results.data.project_data); //table#projectListResults
                     }
-
-                    //self.csrfHash = result.data.token; //Refresh token
-
-    //                if (data.error)
-    //                {
-    //                    Common.displayMessage(data.error_msg, 'danger');
-    //                    return false;
-    //                }
-    //
-    //                div.find('select#route').html(data.data);
-
                 },
                 error : function (a, b, c){
                     table.find("tbody").html("<tr><td colspan='2' class='empty-table'>Unable to load project data. </td></tr>");
@@ -100,62 +94,81 @@
     //                Common.displayMessage("An Error Occurred. If this persists please contact your Administrator.", "danger", 5);
                 }
             });
-
         },
         
-        populateRepositoryDetail : function(id){
-            
-            console.log(id);
+        getProjectListDetail : function(id){
+                        
+            if (!id){
+                console.log("Missing repository id:", id);
+                return false;
+            }
             
             var self = this;
-            var modal = jQuery("div#projectDetailModal");
+            var modal = jQuery("div#project_detail_modal");
+            var body  = modal.find("div.modal-body");
+            var title = modal.find("div.modal-header span.modal-title");
+            var html = "";
             
             jQuery.ajax({
                 type : "GET",
                 url : "ProjectFinderJS/getProjectListDetail", 
                 data : {
-                    id : id,
+                    repo_id : id,
                     [self.csrfToken] : self.csrfHash
                 },
                 dataType : 'json',
                 cache : false,
                 beforeSend : function (){
                     //jQuery('div.overlay').fadeIn('fast');
+                    body.html("<div class='modal_overlay' style='display: block;'><i class='fas fa-spinner fa-spin'></i></div>");
+                    modal.modal("show");
                 },
                 complete : function (a){
                     //jQuery('div.overlay').fadeOut('fast');
                     //self.initialLoadComplete = true;
                 },
-                success : function (result){
+                success : function (results){
                     
-                    console.log(result);
+                    console.log(results);
 
-                    if (result.error){
+                    //Update CSRF token
+                    if (results && results.data.token){
+                        self.csrfHash = results.data.token;
+                    }
+
+                    if (results.error){
                         
                         return false;
                     }
-
-/*
-                    self.projectListData = result.data.project_data;
-
-                    if (self.projectListData){
+                    
+                    /**
+            $data->repository_id = (int) $row->repository_id;
+            $data->name = utf8_decode(htmlentities($row->name, ENT_QUOTES));
+            $data->description = utf8_decode(htmlentities($row->description, ENT_QUOTES));
+            $data->html_url = htmlentities($row->html_url, ENT_QUOTES);
+            $data->stargazers_count = (int) $row->stargazers_count;
+            $data->created_at = $row->create_date;
+            $data->pushed_at = $row->pushed_date;    
+                     */
+                    
+                    if (results.data.project_data){
                         
-                        buildProjectListTable(self.projectListData); //table#projectListResults
+                        html = "<div class='row'>";
+                        html += "<table class='table table-bordered'><tbody>";
+                        html += "<tr><td class='noWrap'>Repository ID</td><td>" + results.data.project_data.repository_id + "</td></tr>";
+                        html += "<tr><td class='noWrap'>Name</td><td>" + results.data.project_data.name + "</td></tr>";
+                        html += "<tr><td class='noWrap'>Description</td><td>" + (results.data.project_data.description ? results.data.project_data.description : "[None]")+ "</td></tr>";
+                        html += "<tr><td class='noWrap'>Link to Project</td><td><a target='_blank' href='" + results.data.project_data.html_url + "'>" + results.data.project_data.html_url + "</a></td></tr>";
+                        html += "<tr><td class='noWrap'>Stargazer Count</td><td>" + formatNumber(results.data.project_data.stargazers_count)  + "</td></tr>";
+                        html += "<tr><td class='noWrap'>Date Created</td><td>" + results.data.project_data.created_at + "</td></tr>";
+                        html += "<tr><td class='noWrap'>Last Push Date</td><td>" + results.data.project_data.pushed_at + "</td></tr>";
+                        html += "</tbody></table>";
+                        html += "</div>";
+                        
+                        body.html(html);
                     }
-
-                    //self.csrfHash = result.data.token; //Refresh token
-
-    //                if (data.error)
-    //                {
-    //                    Common.displayMessage(data.error_msg, 'danger');
-    //                    return false;
-    //                }
-    //
-    //                div.find('select#route').html(data.data);
-*/
                 },
                 error : function (a, b, c){
-                    table.find("tbody").html("<tr><td colspan='2' class='empty-table'>Unable to load project data. </td></tr>");
                     console.log(a, b, c);
     //                jQuery('div.overlay').fadeOut('fast');
     //                Common.displayMessage("An Error Occurred. If this persists please contact your Administrator.", "danger", 5);
@@ -188,17 +201,27 @@
                     //jQuery('div.overlay').fadeOut('fast');
                     self.loadProcessRunning = false;
                 },
-                success : function (data){
-                    console.log(data);
+                success : function (results){
+
+                    //Update CSRF token
+                    if (results && results.data.token){
+                        self.csrfHash = results.data.token;
+                    }
+
+                    if (results.error){
+                        console.log("results: ", results);
+                        return false;
+                    }
+
+                    if (results.data.success_msg){
+                        
+                    }
 
     //                if (data.error)
     //                {
     //                    Common.displayMessage(data.error_msg, 'danger');
     //                    return false;
     //                }
-    //
-    //                div.find('select#route').html(data.data);
-
                 },
                 error : function (a, b, c){
                     console.log(a, b, c);
@@ -233,15 +256,15 @@
             var id = jQuery(this).attr("data-repo-id");
             
             //Display modal with detail
-            ProjectFinder.populateRepositoryDetail(id);
+            ProjectFinder.getProjectListDetail(id);
         });
         
         ProjectFinder.eventListenersLoaded = true;
     };   
     
-    var buildProjectListTable = function(){
+    var buildProjectListTable = function(data){
         
-        if (!ProjectFinder.projectListData || !ProjectFinder.projectListData.length){
+        if (!data || !data.length){
             return false;
         }
         
@@ -249,11 +272,11 @@
         var html = "";
         var i = 0;
         
-        for (i = 0; i < ProjectFinder.projectListData.length; i++){
+        for (i = 0; i < data.length; i++){
             
-            html += "<tr data-repo-id='" + ProjectFinder.projectListData[i].repository_id + "'>";
-            html += "<td>" + ProjectFinder.projectListData[i].name + "</td>";
-            html += "<td>" + formatNumber(ProjectFinder.projectListData[i].stargazers_count) + "</td>";
+            html += "<tr data-repo-id='" + data[i].repository_id + "'>";
+            html += "<td>" + data[i].name + "</td>";
+            html += "<td>" + formatNumber(data[i].stargazers_count) + "</td>";
             html += "</tr>";
         }
         
@@ -261,10 +284,29 @@
         initDataTable.emptyTable(table);
         initDataTable.destroy(table);    
         
+        //Populate table
         table.find("tbody").html(html);
         
         //Now use DataTable to format and add functionality to the table
         initDataTable.activate(table);
+    };
+        
+    var populateModalProjectDetail = function(data){
+        
+        console.log(data);
+        
+        if (!data){
+            
+            return false;
+        }
+        
+        var modal  = jQuery("div#project_detail_modal");
+        var title  = modal.find("div.modal-header span.modal-title");
+        var body   = modal.find("div.modal-body");
+        var html = "";
+        
+        
+        
     };
         
     /**

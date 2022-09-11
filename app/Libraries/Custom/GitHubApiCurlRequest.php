@@ -13,17 +13,25 @@ class GitHubApiCurlRequest
     private $url = "https://api.github.com/search/repositories?q=language:php&sort=stars&order=desc"; 
     
     /**
-     * 
      * @var string
      */
     private $user_agent = "";
+    
+    /**
+     * @var string
+     */
     private $error_msg = "";
     
     /**
      * @var int
      */
     private $page_number = 1;
-    private $per_page = 50;
+    
+    /**
+     * Max = 100
+     * @var int
+     */
+    private $per_page = 100;
     
     /**
      * @var CurlHandle
@@ -61,7 +69,7 @@ class GitHubApiCurlRequest
     /**
      * Set the number of results per search
      * 
-     * @param int $val - Limited to 100
+     * @param int $val - GitHub limits to 100 per request.
      */
     public function setPerPage(int $val = 50){
         
@@ -93,7 +101,7 @@ class GitHubApiCurlRequest
     /**
      * Submit a search request to the GitHub API
      * 
-     * @return boolean
+     * @return array|boolean
      * @throws \Exception
      */
     public function submitGitSearchRequest(){
@@ -112,7 +120,7 @@ class GitHubApiCurlRequest
                 throw new \Exception("Invalid or missing User Agent.");
             }
                         
-            //log_message("error", $this->url . "&per_page=" . $this->per_page . "&page=" . $this->page_number);
+            log_message("error", $this->url . "&per_page=" . $this->per_page . "&page=" . $this->page_number);
             
             curl_setopt($this->curl, CURLOPT_URL, $this->url . "&per_page=" . $this->per_page . "&page=" . $this->page_number);
             curl_setopt($this->curl, CURLINFO_HEADER_OUT, true);
@@ -131,7 +139,7 @@ class GitHubApiCurlRequest
             if ($response && isset($response->items) && count($response->items)){
                 return $response->items;
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $this->error_msg = "Error submitting cURL Request: " . $ex->getMessage();
             log_message("error", $this->error_msg);
         }

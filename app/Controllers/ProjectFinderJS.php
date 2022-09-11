@@ -17,51 +17,23 @@ class ProjectFinderJS extends BaseController
     }            
     
     public function index()
-    {
-        
-        $model = model(ProjectFinderModel::class);
-        
-        $data = ['project_data' => $model->getProjectList()];
-        
-        return view('project_finder', $data);
+    {        
+        return view('project_finder');
     }
     
-    public function test(){
-        
-        //$post = $this->request->getVar();
-        
-        $model = model(ProjectFinderModel::class);
-        
-        // Read new token and assign in $data['token']
-        
-        log_message("error", "calling upsertProjectRecords...");
-        
-        $model->upsertProjectRecords();
-        
-        $data = new ReturnPayload();
-        /*
-        $data->error = false;
-        $data->error_msg = "";
-        $data->data = new \stdClass();
-        $data->data->token = csrf_hash();
-        $data->data->project_data = $model->getProjectList();
-        $data->data->post_data = $post;
-        */
-        //echo $this->response->setJSON($data);
-        echo json_encode($data);
-        exit();
-    }
-    
+    /**
+     * Controller for calling GitHub API and updating database with fresh projects. 
+     */
     public function loadGitHubProjects(){
-                
+                        
         $data = new ReturnPayload();
+        $data->data = new \stdClass();
+        $data->data->token = csrf_hash(); //Generate new token
         
         $model = model(ProjectFinderModel::class);
         
         $agent = $this->request->getServer("HTTP_USER_AGENT"); //Retreive the user agent for the cUrl request
-        
-        log_message("error", "calling loadGitHubProjects..." . $agent);
-        
+
         if (!$agent){
             $data->error = true;
             $data->error_msg = "User Agent Required for GitHub API Request.";
@@ -76,70 +48,67 @@ class ProjectFinderJS extends BaseController
             $data->error = true;
             $data->error_msg = $model->getErrorMsg();
             echo json_encode($data);
-            return false;
+            exit();
         }
         
-        /*
-        $data->error = false;
-        $data->error_msg = "";
-        $data->data = new \stdClass();
-        $data->data->token = csrf_hash();
-        $data->data->project_data = $model->getProjectList();
-        $data->data->post_data = $post;
-        */
-        //echo $this->response->setJSON($data);
+        $data->data->success_msg = "GitHub Projects updated successfully.";
+
         echo json_encode($data);
         exit();
     }
     
+    /**
+     * Controller for retrieving projects from the database.
+     */
     public function getProjectList(){
-        
-        //$post = $this->request->getVar();
-        
+                
         $model = model(ProjectFinderModel::class);
         
         $data = new ReturnPayload();
-        $data->error = false;
-        $data->error_msg = "";
         $data->data = new \stdClass();
-        $data->data->token = csrf_hash(); //Generate new token
+        $data->data->token = csrf_hash(); //Generate new token for subsequent ajax calls. 
         $data->data->project_data = $model->getProjectList();
-        //$data->data->post_data = $post;
+        $data->data->last_updated = $model->getLastUpdateTime();
         
         if ($model->getErrorMsg()){
             $data->error = true;
             $data->error_msg = $model->getErrorMsg();            
         }
         
-        //echo $this->response->setJSON($data);
         echo json_encode($data);
         exit();
     }
         
+    /**
+     * Controller for retrieving detail for a particular project based on repository ID
+     */
     public function getProjectListDetail(){
+        
+        $data = new ReturnPayload();
+        $data->data = new \stdClass();
+        $data->data->token = csrf_hash(); //Generate new token for subsequent ajax calls. 
         
         $post = $this->request->getVar();
         
-        log_message("error", "getProjectListDetail..." . print_r($post['id'], true));
+        if (!$post || !isset($post['repo_id'])){
+            $data->error = true;
+            $data->error_msg = "Invalid repository";
+            echo json_encode($data);
+            exit();
+        }
+        
+        $repo_id = (int) $post['repo_id'];
+        
+        log_message("error", "getProjectListDetail..." . $repo_id);
         
         $model = model(ProjectFinderModel::class);
-        
-        $data = new ReturnPayload();
-        
-        /*
-        $data->error = false;
-        $data->error_msg = "";
-        $data->data = new \stdClass();
-        $data->data->token = csrf_hash(); //Generate new token
-        $data->data->project_data = $model->getProjectList();
-        $data->data->post_data = $post;
-        
+        $data->data->project_data = $model->getProjectListDetail($repo_id);
+       
         if ($model->getErrorMsg()){
             $data->error = true;
             $data->error_msg = $model->getErrorMsg();            
         }
-        */
-        //echo $this->response->setJSON($data);
+        
         echo json_encode($data);
         exit();
     }
