@@ -6,13 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="GitHub PHP Project Finder">
+    <meta name="author" content="Erik Johnson">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url() ?>/public/assets/images/favicon.png">
     <title>GitHub PHP Project Finder</title>
     <!-- Bootstrap Core CSS -->
     <link href="<?= base_url() ?>/public/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     <!-- chartist CSS -->
     <!--<link href="<?= base_url() ?>/public/assets/plugins/chartist-js/dist/chartist.min.css" rel="stylesheet">
     <link href="<?= base_url() ?>/public/assets/plugins/chartist-js/dist/chartist-init.css" rel="stylesheet">
@@ -21,6 +27,8 @@
     <link href="<?= base_url() ?>/public/assets/plugins/c3-master/c3.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="<?= base_url() ?>/public/css/style.css" rel="stylesheet">
+    <!-- Project Finder CSS -->
+    <link href="<?= base_url() ?>/public/css/ProjectFinder.css" rel="stylesheet">
     <!-- You can change the theme colors from here -->
     <link href="<?= base_url() ?>/public/css/colors/blue.css" id="theme" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -175,7 +183,7 @@
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
                 <!-- Row -->
-                <div class="row">
+                <div class="row" id="projectListContainer">
                     <!-- Column -->
                     
                     <div class="col-lg-12 col-md-12">
@@ -185,7 +193,7 @@
                                     <div class="col-12">
                                         <div class="d-flex flex-wrap">
                                             <div>
-                                                <h3 class="card-title">Public PHP Proects</h3>
+                                                <h3 class="card-title">Public PHP Projects</h3>
                                                 <h6 class="card-subtitle">Most-Starred Projects on GitHub</h6> 
                                             </div>
                                             <!--
@@ -200,7 +208,25 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="table-container" style="min-height: 360px;"></div>
+                                        
+                                        <hr />
+                                        
+                                        <div class="table-container" style="min-height: 360px;">
+                                            
+                                            <table id="projectListResults" class="table table-bordered table-hover"><!--table-striped -->
+                                                
+                                                <thead>
+                                                    <th>Repository Name</th>
+                                                    <th>Number of Stars</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="2" class="empty-table">No Results</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>                                            
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -488,23 +514,17 @@
                         </div>
                     </div>
                 </div>
-                
-                <?php */ ?>
-                
+                                
                 <div class="row">
 
                     <div class="col-lg-12 col-xlg-12 col-md-12">
                         <pre>
-                            <?php echo "Project Data: " . print_r($project_data, true); ?>
-
-                            <?= site_url() ?>
-
-                            <?= site_url("test") ?>
-
-                            <?= base_url() ?>
+                            <?php //echo "Project Data: " . print_r($project_data, true); ?>
                         </pre>
                     </div>
                 </div>
+                * <?php */ ?>
+                
                 <!-- ============================================================== -->
                 <!-- End Page Content -->
                 <!-- ============================================================== -->
@@ -515,7 +535,7 @@
             <!-- ============================================================== -->
             <!-- footer -->
             <!-- ============================================================== -->
-            <footer class="footer">© 2022 Erik Johnson Cyber Studios</footer>
+            <footer class="footer">© 2022 Erik Johnson Studios</footer>
             <!-- ============================================================== -->
             <!-- End footer -->
             <!-- ============================================================== -->
@@ -536,6 +556,9 @@
     <!-- All Jquery -->
     <!-- ============================================================== -->
     <script src="<?= base_url() ?>/public/assets/plugins/jquery/jquery.min.js"></script>
+    <!-- DataTables -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+    
     <!-- Bootstrap tether Core JavaScript -->
     <script src="<?= base_url() ?>/public/assets/plugins/bootstrap/js/tether.min.js"></script>
     <script src="<?= base_url() ?>/public/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -565,19 +588,15 @@
     <script type="text/javascript">
         $(document).ready(function (){
             
-            console.log("jQuery is loaded!");
-            
-            ProjectFinder.baseUrl = "<?= site_url() ?>";
+            //Initialize the ProjectFinder object
+            //ProjectFinder.baseUrl = "<?= site_url() ?>";
             ProjectFinder.csrfHash = "<?= csrf_hash() ?>";
             ProjectFinder.csrfToken = "<?= csrf_token() ?>";
             
-            console.log("ProjectFinder.csrfHash", ProjectFinder.csrfHash);
-            console.log("ProjectFinder.csrfToken", ProjectFinder.csrfToken);
+            //console.log("ProjectFinder.csrfHash", ProjectFinder.csrfHash);
+            //console.log("ProjectFinder.csrfToken", ProjectFinder.csrfToken);
             
             ProjectFinder.initialize();
-            
-            
-            
         });
     </script>
 </body>

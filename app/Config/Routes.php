@@ -38,7 +38,9 @@ $routes->set404Override();
 $routes->get('/', 'Home::index');
 //$routes->get('/', 'ProjectFinderJS::index');
 $routes->post('ProjectFinderJS/test', 'ProjectFinderJS::test');
+$routes->post('ProjectFinderJS/loadGitHubProjects', 'ProjectFinderJS::loadGitHubProjects');
 $routes->get('ProjectFinderJS/getProjectListData', 'ProjectFinderJS::getProjectList');
+$routes->get('ProjectFinderJS/getProjectListDetail', 'ProjectFinderJS::getProjectListDetail');
 
 //$routes->match(['get', 'post'], '/ajax-test', 'ProjectFinderJS::test');
 

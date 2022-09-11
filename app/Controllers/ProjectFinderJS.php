@@ -52,13 +52,81 @@ class ProjectFinderJS extends BaseController
         exit();
     }
     
+    public function loadGitHubProjects(){
+                
+        $data = new ReturnPayload();
+        
+        $model = model(ProjectFinderModel::class);
+        
+        $agent = $this->request->getServer("HTTP_USER_AGENT"); //Retreive the user agent for the cUrl request
+        
+        log_message("error", "calling loadGitHubProjects..." . $agent);
+        
+        if (!$agent){
+            $data->error = true;
+            $data->error_msg = "User Agent Required for GitHub API Request.";
+            echo json_encode($data);
+            exit();
+        }
+        
+        $model->setUserAgent($agent);
+        $model->loadGitHubProjects();
+        
+        if ($model->getErrorMsg()){
+            $data->error = true;
+            $data->error_msg = $model->getErrorMsg();
+            echo json_encode($data);
+            return false;
+        }
+        
+        /*
+        $data->error = false;
+        $data->error_msg = "";
+        $data->data = new \stdClass();
+        $data->data->token = csrf_hash();
+        $data->data->project_data = $model->getProjectList();
+        $data->data->post_data = $post;
+        */
+        //echo $this->response->setJSON($data);
+        echo json_encode($data);
+        exit();
+    }
+    
     public function getProjectList(){
         
-        $post = $this->request->getVar();
+        //$post = $this->request->getVar();
         
         $model = model(ProjectFinderModel::class);
         
         $data = new ReturnPayload();
+        $data->error = false;
+        $data->error_msg = "";
+        $data->data = new \stdClass();
+        $data->data->token = csrf_hash(); //Generate new token
+        $data->data->project_data = $model->getProjectList();
+        //$data->data->post_data = $post;
+        
+        if ($model->getErrorMsg()){
+            $data->error = true;
+            $data->error_msg = $model->getErrorMsg();            
+        }
+        
+        //echo $this->response->setJSON($data);
+        echo json_encode($data);
+        exit();
+    }
+        
+    public function getProjectListDetail(){
+        
+        $post = $this->request->getVar();
+        
+        log_message("error", "getProjectListDetail..." . print_r($post['id'], true));
+        
+        $model = model(ProjectFinderModel::class);
+        
+        $data = new ReturnPayload();
+        
+        /*
         $data->error = false;
         $data->error_msg = "";
         $data->data = new \stdClass();
@@ -70,18 +138,8 @@ class ProjectFinderJS extends BaseController
             $data->error = true;
             $data->error_msg = $model->getErrorMsg();            
         }
-        
+        */
         //echo $this->response->setJSON($data);
-        echo json_encode($data);
-        exit();
-    }
-    
-    public function loadGitHubProjects(){
-        
-        $model = model(ProjectFinderModel::class);
-        
-        $model->getProjectList();
-        
         echo json_encode($data);
         exit();
     }

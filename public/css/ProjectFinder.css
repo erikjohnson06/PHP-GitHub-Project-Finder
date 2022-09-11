@@ -1,0 +1,21 @@
+
+/*
+div#projectListContainer hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+*/
+table#projectListResults thead th,
+table#projectListResults tbody td {
+    text-align: center;
+}
+
+table#projectListResults tbody tr td {
+    cursor: pointer;
+}
+
+table tbody tr td.empty-table {
+    background-color: #eee;
+    padding: 10px;
+    text-align: center;
+}
