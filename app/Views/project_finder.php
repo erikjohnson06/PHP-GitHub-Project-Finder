@@ -13,10 +13,8 @@
     <title>GitHub PHP Project Finder</title>
     <!-- Bootstrap Core CSS -->
     <link href="<?= base_url() ?>/public/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
-
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     <!-- chartist CSS -->
@@ -62,9 +60,7 @@
                 <!-- ============================================================== -->
                 <div class="navbar-header">
                     <a class="navbar-brand" href="index.html">
-                        <!-- Logo icon --><b>
-                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
-                            
+                        <!-- Logo icon --><b>                            
                             <!-- Light Logo icon -->
                             <img src="<?= base_url() ?>/public/assets/images/github_logo.png" alt="logo" width=50 class="light-logo" />
                         </b>
@@ -72,8 +68,6 @@
                         <!-- Logo text -->
                         <span class="light-logo">
                             Project Finder
-                         <!-- Light Logo text -->    
-                         <!--<img src="<?= base_url() ?>/public/assets/images/logo-light-text.png" class="light-logo" alt="logo_text" />-->
                         </span> 
                     </a>
                 </div>
@@ -82,20 +76,10 @@
                 <!-- ============================================================== -->
                 <div class="navbar-collapse">
                     <!-- ============================================================== -->
-                    <!-- toggle and nav items -->
+                    <!-- User profile -->
                     <!-- ============================================================== -->
                     <ul class="navbar-nav mr-auto mt-md-0">
-                        <!-- This is  -->
                         <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
-                        <!-- ============================================================== -->
-                        <!-- Search -->
-                        <!-- ============================================================== -->
-                        <!-- <li class="nav-item hidden-sm-down search-box"> <a class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)">
-                            <i class="ti-search"></i></a>
-                            <form class="app-search">
-                                <input type="text" class="form-control" placeholder="Search & enter"> <a class="srh-btn"><i class="ti-close"></i></a> 
-                            </form>
-                        </li>-->
                     </ul>
                     <!-- ============================================================== -->
                     <!-- User profile and search -->
@@ -155,10 +139,10 @@
         <!-- ============================================================== -->
         <!-- End Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
+        
         <!-- ============================================================== -->
         <!-- Page wrapper  -->
         <!-- ============================================================== -->
-                
         <div class="page-wrapper">
             <!-- ============================================================== -->
             <!-- Container fluid  -->
@@ -168,16 +152,12 @@
                 <!-- Bread crumb and right sidebar toggle -->
                 <!-- ============================================================== -->
                 <div class="row page-titles">
-                    <div class="col-md-8 col-8 align-self-center">
+                    <div class="col-md-12 col-12 align-self-center">
                         <h3 class="text-themecolor">GitHub Project Finder</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0);">Language</a></li>
                             <li class="breadcrumb-item active">PHP</li>
                         </ol>
-                    </div>
-                    <div class="col-md-4 col-4 align-right">
-                        <span id="last_update_timestamp">Last Updated: [None]</span>
-                        <span id="launch_update_request">[Update Now]</span>
                     </div>
                 </div>
                 <!-- ============================================================== -->
@@ -194,7 +174,7 @@
                         <div class="card">
                             <div class="card-block">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-md-6 col-6">
                                         <div class="d-flex flex-wrap">
                                             <div>
                                                 <h3 class="card-title">Public PHP Projects</h3>
@@ -202,14 +182,19 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-6 col-6 align-right">
+                                        <span id="last_update_timestamp">Last Updated: [None]</span>
+                                        <span id="launch_update_request">[Update Now]</span>
+                                    </div>
+                                </div>
+                                <div  class="row">
+                                    <div class="col-12 alert alert-dismissible" id="info-msg-container" role="alert"></div>
+                                </div>
+                                <div class="row">
                                     <div class="col-12">
-                                        
                                         <hr />
-                                        
                                         <div class="table-container" style="min-height: 360px;">
-                                            
-                                            <table id="projectListResults" class="table table-bordered table-hover"><!--table-striped -->
-                                                
+                                            <table id="projectListResults" class="table table-bordered table-hover">
                                                 <thead>
                                                     <th>Repository Name</th>
                                                     <th>Number of Stars</th>
@@ -220,7 +205,6 @@
                                                     </tr>
                                                 </tbody>
                                             </table>                                            
-                                            
                                         </div>
                                     </div>
                                 </div>
@@ -242,26 +226,19 @@
             
             <!-- Project Detail Modal -->
             <div id="project_detail_modal" class="modal" tabindex="-1" role="dialog">
-
                 <div class="modal-dialog modal-lg" role="document">
-
                     <div class="modal-content">
-
                         <div class="modal-header">
                             <span class="modal-title">Project Detail</span>
                             <a class="close" data-dismiss="modal" aria-label="Close" title="Close Window">[X]</a>
                         </div>
-
                         <div class="modal-body"></div>
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            
+            </div>            
             <!-- ============================================================== -->
             <!-- footer -->
             <!-- ============================================================== -->
@@ -273,11 +250,6 @@
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
         <!-- ============================================================== -->
-        
-        
-        
-        
-        
     </div>
     <!-- ============================================================== -->
     <!-- End Wrapper -->
@@ -288,7 +260,6 @@
     <script src="<?= base_url() ?>/public/assets/plugins/jquery/jquery.min.js"></script>
     <!-- DataTables -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-    
     <!-- Bootstrap tether Core JavaScript -->
     <script src="<?= base_url() ?>/public/assets/plugins/bootstrap/js/tether.min.js"></script>
     <script src="<?= base_url() ?>/public/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -318,14 +289,9 @@
     <script type="text/javascript">
         $(document).ready(function (){
             
-            //Initialize the ProjectFinder object
-            //ProjectFinder.baseUrl = "<?= site_url() ?>";
+            //Initialize the ProjectFinder object. Record CSRF hash/tokens for ajax requests.
             ProjectFinder.csrfHash = "<?= csrf_hash() ?>";
             ProjectFinder.csrfToken = "<?= csrf_token() ?>";
-            
-            //console.log("ProjectFinder.csrfHash", ProjectFinder.csrfHash);
-            //console.log("ProjectFinder.csrfToken", ProjectFinder.csrfToken);
-            
             ProjectFinder.initialize();
         });
     </script>

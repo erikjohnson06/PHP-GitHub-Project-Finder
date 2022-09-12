@@ -2344,7 +2344,7 @@ ul#themecolors {
   margin-bottom: 30px; }
   .card .card-subtitle {
     font-weight: 300;
-    margin-bottom: 15px;
+    /* margin-bottom: 15px; */
     color: #99abb4; }
 
 .card-inverse .card-blockquote .blockquote-footer,

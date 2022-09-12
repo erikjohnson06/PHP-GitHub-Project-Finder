@@ -37,10 +37,27 @@ div#project_detail_modal .modal-body table td.noWrap {
     white-space: nowrap;
 }
 
-div.page-titles span#launch_update_request {
+div#projectListContainer span#launch_update_request {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+div#projectListContainer span#last_update_timestamp {
+    display: none;
+}
+
+div#projectListContainer div#info-msg-container {
+    display: none;
+    margin-top: 1rem;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+div#projectListContainer div#info-msg-container button.close {
+    padding: 0px;
+    top: 1px;
+    right: 1px;
 }
 
 div.modal_overlay {

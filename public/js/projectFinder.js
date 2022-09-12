@@ -22,33 +22,33 @@
         eventListenersLoaded : false, 
         initialLoadComplete : false, 
         loadProcessRunning : false, 
-        
+
         /**
-         * @type Array
+         * Initialize the Project Finder object
+         * 
+         * @returns {void}
          */
-        //projectListData : [],
-        
         initialize : function(){
                         
+            //Register event listenters
             addHandlers();
             
+            //Retrieve projects list
             this.getProjectListData();
         },
 
+        /**
+         * Fetch the current list of project data in order to build the table
+         * 
+         * @returns {void}
+         */
         getProjectListData : function(){
             
             var self = this;
             var table = jQuery("table#projectListResults");
 
             if (!this.initialLoadComplete){
-                table.find("tbody").html(
-                        "<tr>" + 
-                            "<td colspan='2' class='empty-table'>Loading Data... " + 
-                            //"<div class='spinner-border spinner-border-sm' role='status'><span class='sr-only'>Loading...</span></div>" + 
-                            "<i class='fas fa-spinner fa-spin'></i>" + 
-                            "</td>" + 
-                        "</tr>"
-                        );
+                table.find("tbody").html("<tr><td colspan='2' class='empty-table'>Loading Data... <i class='fas fa-spinner fa-spin'></i></td></tr>");
             }
 
             jQuery.ajax({
@@ -59,39 +59,34 @@
                 },
                 dataType : 'json',
                 cache : false,
-                beforeSend : function (){
-                    //jQuery('div.overlay').fadeIn('fast');
-                },
                 complete : function (a){
-                    //jQuery('div.overlay').fadeOut('fast');
                     self.initialLoadComplete = true;
                 },
                 success : function (results){
                     
-                    console.log(results);
-
-                    //Update CSRF token
+                    hideMessage(); //Hide any existing messages
+                    
                     if (results && results.data.token){
-                        self.csrfHash = results.data.token;
+                        self.csrfHash = results.data.token; //Update CSRF token
                     }
 
                     if (results.error){
-                        
+                        displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Error: " + results.error_msg, "error", true);
                         return false;
                     }
 
-                    //self.projectListData = results.data.project_data;
-
                     if (results.data.project_data){
-                        
-                        buildProjectListTable(results.data.project_data); //table#projectListResults
+                        buildProjectListTable(results.data.project_data);
+                    }
+                    
+                    //Update timestamp
+                    if (results.data.last_updated){
+                        updateLastUpdatedTimestamp(results.data.last_updated);
                     }
                 },
                 error : function (a, b, c){
-                    table.find("tbody").html("<tr><td colspan='2' class='empty-table'>Unable to load project data. </td></tr>");
+                    table.find("tbody").html("<tr><td colspan='2' class='empty-table'>No Results</td></tr>");
                     console.log(a, b, c);
-    //                jQuery('div.overlay').fadeOut('fast');
-    //                Common.displayMessage("An Error Occurred. If this persists please contact your Administrator.", "danger", 5);
                 }
             });
         },
@@ -119,17 +114,12 @@
                 dataType : 'json',
                 cache : false,
                 beforeSend : function (){
-                    //jQuery('div.overlay').fadeIn('fast');
                     body.html("<div class='modal_overlay' style='display: block;'><i class='fas fa-spinner fa-spin'></i></div>");
                     modal.modal("show");
                 },
-                complete : function (a){
-                    //jQuery('div.overlay').fadeOut('fast');
-                    //self.initialLoadComplete = true;
-                },
                 success : function (results){
                     
-                    console.log(results);
+                    hideMessage(); //Hide any existing messages
 
                     //Update CSRF token
                     if (results && results.data.token){
@@ -137,19 +127,9 @@
                     }
 
                     if (results.error){
-                        
+                        displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Error: " + results.error_msg, "error", true);
                         return false;
                     }
-                    
-                    /**
-            $data->repository_id = (int) $row->repository_id;
-            $data->name = utf8_decode(htmlentities($row->name, ENT_QUOTES));
-            $data->description = utf8_decode(htmlentities($row->description, ENT_QUOTES));
-            $data->html_url = htmlentities($row->html_url, ENT_QUOTES);
-            $data->stargazers_count = (int) $row->stargazers_count;
-            $data->created_at = $row->create_date;
-            $data->pushed_at = $row->pushed_date;    
-                     */
                     
                     if (results.data.project_data){
                         
@@ -170,21 +150,26 @@
                 },
                 error : function (a, b, c){
                     console.log(a, b, c);
-    //                jQuery('div.overlay').fadeOut('fast');
-    //                Common.displayMessage("An Error Occurred. If this persists please contact your Administrator.", "danger", 5);
+                    body.html("<div class='modal_overlay' style='display: block;'><i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Whoops.. an unexpected error has occurred.</div>");
                 }
             });
         },
         
+        /**
+         * Refresh database and table with the most current GitHub project data
+         * 
+         * @returns {Boolean}
+         */
         loadGitHubProjects : function(){
-
-            console.log("loadGitHubProjects...");
 
             var self = this;
 
             if (this.loadProcessRunning){
+                displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Processing is already running. Try again momentarily.", "error");
                 return false;
             }
+
+            this.loadProcessRunning = true; //Helps to prevent multiple rapid requests from user
 
             jQuery.ajax({
                 type : "POST",
@@ -195,13 +180,14 @@
                 dataType : 'json',
                 cache : false,
                 beforeSend: function (){
-                    //jQuery('div.overlay').fadeIn('fast');
+                    displayMessage("<i class='fas fa-spinner fa-spin'></i> &nbsp;&nbsp; Working.. This may take a few moments.", "info");
                 },
                 complete : function (a){
-                    //jQuery('div.overlay').fadeOut('fast');
                     self.loadProcessRunning = false;
                 },
                 success : function (results){
+
+                    hideMessage(); //Hide any existing messages
 
                     //Update CSRF token
                     if (results && results.data.token){
@@ -209,28 +195,31 @@
                     }
 
                     if (results.error){
+                        displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Error: " + results.error_msg, "error", true);
                         console.log("results: ", results);
                         return false;
                     }
 
                     if (results.data.success_msg){
-                        
+                        displayMessage("<i class='fa fa-check'></i> &nbsp;&nbsp; " + results.data.success_msg, "success", true);
                     }
-
-    //                if (data.error)
-    //                {
-    //                    Common.displayMessage(data.error_msg, 'danger');
-    //                    return false;
-    //                }
+                    
+                    //Rebuild projects table
+                    if (results.data.project_data){
+                        buildProjectListTable(results.data.project_data);
+                    }
+                    
+                    //Update timestamp
+                    if (results.data.last_updated){
+                        updateLastUpdatedTimestamp(results.data.last_updated);
+                    }
                 },
                 error : function (a, b, c){
                     console.log(a, b, c);
-    //                jQuery('div.overlay').fadeOut('fast');
-    //                Common.displayMessage("An Error Occurred. If this persists please contact your Administrator.", "danger", 5);
+                    displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Whoops.. an unexpected error has occurred.", "error", true);
                 }
             });
         }
-        
     };
     
     /*
@@ -238,20 +227,18 @@
      */
     
     /**
+     * Event listeners
      * 
      * @returns {Boolean}
      */
     var addHandlers = function(){
-
-        //var self = this;
-
-        console.log("addHandlers...");
         
+        //No need to attach the same listeners more than once
         if (ProjectFinder.eventListenersLoaded){
             return false;
         }
         
-        jQuery("table#projectListResults").on("click", "tbody tr", function(){
+        jQuery("div#projectListContainer table#projectListResults").on("click", "tbody tr", function(){
             
             var id = jQuery(this).attr("data-repo-id");
             
@@ -259,9 +246,19 @@
             ProjectFinder.getProjectListDetail(id);
         });
         
+        jQuery("div#projectListContainer span#launch_update_request").click(function(){     
+            ProjectFinder.loadGitHubProjects();
+        });
+        
         ProjectFinder.eventListenersLoaded = true;
     };   
     
+    /**
+     * Given an array of projects, build the HTML table
+     * 
+     * @param {array} data
+     * @returns {Boolean}
+     */
     var buildProjectListTable = function(data){
         
         if (!data || !data.length){
@@ -273,10 +270,9 @@
         var i = 0;
         
         for (i = 0; i < data.length; i++){
-            
             html += "<tr data-repo-id='" + data[i].repository_id + "'>";
-            html += "<td>" + data[i].name + "</td>";
-            html += "<td>" + formatNumber(data[i].stargazers_count) + "</td>";
+            html +=     "<td>" + data[i].name + "</td>";
+            html +=     "<td>" + formatNumber(data[i].stargazers_count) + "</td>";
             html += "</tr>";
         }
         
@@ -290,23 +286,74 @@
         //Now use DataTable to format and add functionality to the table
         initDataTable.activate(table);
     };
+
+    /**
+     * Update the timestamp of the last GutHUb search request
+     * 
+     * @param {string} time
+     * @returns {Boolean}
+     */
+    var updateLastUpdatedTimestamp = function(time){
         
-    var populateModalProjectDetail = function(data){
-        
-        console.log(data);
-        
-        if (!data){
-            
+        if (!time){
             return false;
         }
         
-        var modal  = jQuery("div#project_detail_modal");
-        var title  = modal.find("div.modal-header span.modal-title");
-        var body   = modal.find("div.modal-body");
-        var html = "";
+        var span = jQuery("div#projectListContainer span#last_update_timestamp");
+        span.html("Last Updated: " + time).show();
+    };
+                
+    /**
+     * Display message to user
+     * 
+     * @param {string} msg
+     * @param {string} type
+     * @param {Boolean} dismissable
+     * @returns {Boolean}
+     */
+    var displayMessage = function(msg, type, dismissable){
         
+        if (!msg){
+            return false;
+        }
+
+        var div = jQuery("div#projectListContainer div#info-msg-container");
+        var cls = "";
         
+        if (type){
+            switch(type){
+                case "error":
+                    cls = "alert-danger";
+                    break;
+                case "success":
+                    cls = "alert-success";
+                    break;
+                case "info":
+                default: 
+                    cls = "alert-info";
+                    break;
+            }
+        }
         
+        //Include dismissable button on alert
+        if (dismissable === true){
+            msg += "<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+        }
+        
+        //Display message with proper style
+        div.removeClass("alert-danger alert-success alert-primary").addClass(cls).html(msg).show();
+    };
+    
+    /**
+     * Hide message
+     * 
+     * @returns {void}
+     */
+    var hideMessage = function(){
+        
+        var div = jQuery("div#projectListContainer div#info-msg-container");
+        
+        div.html("").hide();
     };
         
     /**
@@ -371,10 +418,4 @@
     
     //Add the object to the window
     window.ProjectFinder = ProjectFinder;
-
-    //Initialize the confirm modal
-    //jQuery(document).on('ready', function ()
-    //{
-    //    confirm_modal.initialize();
-    //});
 })();

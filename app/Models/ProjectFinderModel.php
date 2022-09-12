@@ -20,9 +20,8 @@ class ProjectFinderModel extends Model
     public function __construct() //ConnectionInterface $db
     {
         parent::__construct();
-                
-        //$db = \Config\Database::connect();
-        
+
+        //Load a few custom classes
         if (!class_exists("GitHubRepositoryRecord")){
             require_once APPPATH."Libraries/Custom/GitHubRepositoryRecord.php";
         }
@@ -194,9 +193,7 @@ class ProjectFinderModel extends Model
                         " description = " . $this->db->escape($record->description) . ", " .         
                         " stargazers_count = " . $record->stargazers_count . ", " . 
                         " pushed_at = '" . $record->pushed_at . "'";
-                
-                log_message("error", $query);
-                
+                                
                 if (!$this->db->query($query)){
                     $error = $this->db->error();
                     throw new \Exception($error['message'] . " (" . $error['code'] . ")");
@@ -224,7 +221,7 @@ class ProjectFinderModel extends Model
         if (!$this->user_agent){
             return false;
         }
-                  
+
         $curl = new GitHubApiCurlRequest();
         $curl->init_cURL();
         $curl->setUserAgent($this->user_agent);
@@ -232,7 +229,7 @@ class ProjectFinderModel extends Model
         
         try {
 
-            //Prevent running multiple requests from being submitted. No need to throw an exception here. Just check for the error message in the controller.
+            //Prevent running multiple requests from multiple users being submitted. A queueing method might be more appropriate here.  
             if ($this->isRequestProcessRunning()){
                 $this->error_msg = "Request is already running. Try again once complete.";
                 return false;
@@ -291,7 +288,7 @@ class ProjectFinderModel extends Model
                 $page++; //Increase pagination
                 $number_of_requests++;
                 
-                //GitHub limits 30 requests per minute
+                //GitHub limits 30 requests per minute.
                 if ($number_of_requests > 1){
                     break;
                 }

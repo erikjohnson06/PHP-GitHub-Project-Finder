@@ -8,9 +8,7 @@ use App\Libraries\ReturnPayload;
 class ProjectFinderJS extends BaseController
 {
     public function __construct()
-    {
-        //parent::__construct();
-        
+    {        
         if (!class_exists("ReturnPayload")){
             require_once APPPATH."Libraries/Custom/ReturnPayload.php";
         }
@@ -24,8 +22,8 @@ class ProjectFinderJS extends BaseController
     /**
      * Controller for calling GitHub API and updating database with fresh projects. 
      */
-    public function loadGitHubProjects(){
-                        
+    public function loadGitHubProjects()
+    {
         $data = new ReturnPayload();
         $data->data = new \stdClass();
         $data->data->token = csrf_hash(); //Generate new token
@@ -51,6 +49,9 @@ class ProjectFinderJS extends BaseController
             exit();
         }
         
+        $data->data->project_data = $model->getProjectList();
+        $data->data->last_updated = $model->getLastUpdateTime();
+        
         $data->data->success_msg = "GitHub Projects updated successfully.";
 
         echo json_encode($data);
@@ -60,13 +61,14 @@ class ProjectFinderJS extends BaseController
     /**
      * Controller for retrieving projects from the database.
      */
-    public function getProjectList(){
-                
-        $model = model(ProjectFinderModel::class);
-        
+    public function getProjectList()
+    {        
         $data = new ReturnPayload();
         $data->data = new \stdClass();
         $data->data->token = csrf_hash(); //Generate new token for subsequent ajax calls. 
+        
+        $model = model(ProjectFinderModel::class);
+        
         $data->data->project_data = $model->getProjectList();
         $data->data->last_updated = $model->getLastUpdateTime();
         
@@ -98,9 +100,7 @@ class ProjectFinderJS extends BaseController
         }
         
         $repo_id = (int) $post['repo_id'];
-        
-        log_message("error", "getProjectListDetail..." . $repo_id);
-        
+                
         $model = model(ProjectFinderModel::class);
         $data->data->project_data = $model->getProjectListDetail($repo_id);
        
