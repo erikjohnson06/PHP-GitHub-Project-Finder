@@ -133,7 +133,6 @@
                     
                     if (results.data.project_data){
                         
-                        html = "<div class='row'>";
                         html += "<table class='table table-bordered'><tbody>";
                         html += "<tr><td class='noWrap'>Repository ID</td><td>" + results.data.project_data.repository_id + "</td></tr>";
                         html += "<tr><td class='noWrap'>Name</td><td>" + results.data.project_data.name + "</td></tr>";
@@ -143,7 +142,6 @@
                         html += "<tr><td class='noWrap'>Date Created</td><td>" + results.data.project_data.created_at + "</td></tr>";
                         html += "<tr><td class='noWrap'>Last Push Date</td><td>" + results.data.project_data.pushed_at + "</td></tr>";
                         html += "</tbody></table>";
-                        html += "</div>";
                         
                         body.html(html);
                     }

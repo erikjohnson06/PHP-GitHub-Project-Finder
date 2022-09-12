@@ -289,7 +289,7 @@ class ProjectFinderModel extends Model
                 $number_of_requests++;
                 
                 //GitHub limits 30 requests per minute.
-                if ($number_of_requests > 1){
+                if ($number_of_requests > 30){
                     break;
                 }
             }

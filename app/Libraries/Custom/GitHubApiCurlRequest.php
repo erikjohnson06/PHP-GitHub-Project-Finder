@@ -8,6 +8,9 @@ class GitHubApiCurlRequest
     /**
      * Default to searching for PHP projects, sorted by the number of stargazers
      * 
+     * Examples of query string: q=language:php stars:500..2000 created:2021-01-01..2021-12-31 
+     * --> Search for projects written in PHP with between x to y stars created between date x and date y
+     * 
      * @var string
      */
     private $url = "https://api.github.com/search/repositories?q=language:php&sort=stars&order=desc"; 
