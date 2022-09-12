@@ -143,6 +143,37 @@ class ProjectFinderModel extends Model
     }
         
     /**
+     * Determine if another cURL request is currently underway
+     * 
+     * @return boolean
+     */
+    public function getProjectListRecordCount(){
+        
+        try {
+            
+            $count = 0;
+            
+            $results = $this->db->query("SELECT count(*) AS cnt FROM github_projects ");
+                                   
+            if (!$results || !$results->getNumRows()){
+                return $count;
+            }
+
+            $row = $results->getRow();
+            
+            if ($row && isset($row->cnt)){
+                $count = $row->cnt;
+            }
+        } 
+        catch (\Exception $ex) {
+            $this->error_msg = "Request Manager Error: " . $ex->getMessage();
+            log_message("error", $this->error_msg);
+        }
+        
+        return $count;
+    }
+    
+    /**
      * Insert/Update a list of project records
      * 
      * @param GitHubRepositoryRecord[] $data
@@ -178,6 +209,7 @@ class ProjectFinderModel extends Model
                     continue;
                 }
 
+                //Use the ON DUPLICATE KEY UPDATE clause here since the repository id's are unique and act as the primary key
                 $query = "INSERT INTO github_projects " . 
                         " (repository_id, name, html_url, description, stargazers_count, created_at, pushed_at) " . 
                         " VALUES (" . $record->repository_id . ", " . 
@@ -221,7 +253,22 @@ class ProjectFinderModel extends Model
         if (!$this->user_agent){
             return false;
         }
-
+        
+        /**
+         * Note: according to GitHub documentation, search results are limited to up to 1,000 results for each search, 
+         * with up to 100 results per page, and up to 30 requests per minute (if using basic authentication, OAuth, or 
+         * client ID / secret), or up to 10 per minute for unauthenticated requests. For this reason, one could be creative 
+         * in the way you submit the search requests by slicing the search into chunks. For example, one approach might be 
+         * to search for PHP projects by year starting with the current year (created:2022) and continuing x number of years. 
+         * Another approach might be to search by specific ranges of stars (stars:>=5000, stars:1000..2000, etc). Using either 
+         * one of these approaches would yield more results than what you would otherwise get from the simple search we are 
+         * using here. For this project, however, I am only searching for the PHP projects with the greatest number of 
+         * stars because the requirements were to “retrieve the most-starred public PHP projects”.
+         * 
+         * For reference: 
+         * https://docs.github.com/en/rest/search#about-the-search-api         * 
+         */
+        
         $curl = new GitHubApiCurlRequest();
         $curl->init_cURL();
         $curl->setUserAgent($this->user_agent);

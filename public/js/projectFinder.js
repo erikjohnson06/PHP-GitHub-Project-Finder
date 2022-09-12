@@ -48,8 +48,10 @@
             var table = jQuery("table#projectListResults");
 
             if (!this.initialLoadComplete){
-                table.find("tbody").html("<tr><td colspan='2' class='empty-table'>Loading Data... <i class='fas fa-spinner fa-spin'></i></td></tr>");
+                displayMessage("<i class='fas fa-spinner fa-spin'></i> &nbsp;&nbsp; Loading Projects..", "info");
             }
+
+            hideMessage(); //Hide any existing messages
 
             jQuery.ajax({
                 type : "GET",
@@ -60,16 +62,16 @@
                 dataType : 'json',
                 cache : false,
                 complete : function (a){
+                    
                     self.initialLoadComplete = true;
+                    
+                    //Update CSRF token
+                    if (a.responseJSON.data.token){
+                        self.csrfHash = a.responseJSON.data.token;
+                    }
                 },
                 success : function (results){
-                    
-                    hideMessage(); //Hide any existing messages
-                    
-                    if (results && results.data.token){
-                        self.csrfHash = results.data.token; //Update CSRF token
-                    }
-
+                                        
                     if (results.error){
                         displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Error: " + results.error_msg, "error", true);
                         return false;
@@ -91,6 +93,12 @@
             });
         },
         
+        /**
+         * Retreive the detail for a given project and display it in a modal 
+         * 
+         * @param {int} id
+         * @returns {Boolean}
+         */
         getProjectListDetail : function(id){
                         
             if (!id){
@@ -117,14 +125,16 @@
                     body.html("<div class='modal_overlay' style='display: block;'><i class='fas fa-spinner fa-spin'></i></div>");
                     modal.modal("show");
                 },
+                complete : function (a, b, c){
+                                        
+                    //Update CSRF token
+                    if (a.responseJSON.data.token){
+                        self.csrfHash = a.responseJSON.data.token;
+                    }
+                },
                 success : function (results){
                     
                     hideMessage(); //Hide any existing messages
-
-                    //Update CSRF token
-                    if (results && results.data.token){
-                        self.csrfHash = results.data.token;
-                    }
 
                     if (results.error){
                         displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Error: " + results.error_msg, "error", true);
@@ -180,17 +190,18 @@
                 beforeSend: function (){
                     displayMessage("<i class='fas fa-spinner fa-spin'></i> &nbsp;&nbsp; Working.. This may take a few moments.", "info");
                 },
-                complete : function (a){
+                complete : function (a, b, c){
+                                        
+                    //Update CSRF token
+                    if (a.responseJSON.data.token){
+                        self.csrfHash = a.responseJSON.data.token;
+                    }
+                    
                     self.loadProcessRunning = false;
                 },
                 success : function (results){
 
                     hideMessage(); //Hide any existing messages
-
-                    //Update CSRF token
-                    if (results && results.data.token){
-                        self.csrfHash = results.data.token;
-                    }
 
                     if (results.error){
                         displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Error: " + results.error_msg, "error", true);
@@ -316,7 +327,7 @@
         }
 
         var div = jQuery("div#projectListContainer div#info-msg-container");
-        var cls = "";
+        var html = "", cls = "";
         
         if (type){
             switch(type){
@@ -332,14 +343,16 @@
                     break;
             }
         }
-        
+                
         //Include dismissable button on alert
         if (dismissable === true){
             msg += "<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
         }
         
+        html = "<div class='alert alert-dismissible " + cls + "' role='alert'>" + msg + "</div>";
+        
         //Display message with proper style
-        div.removeClass("alert-danger alert-success alert-primary").addClass(cls).html(msg).show();
+        div.html(html).show(); //removeClass("alert-danger alert-success alert-primary").
     };
     
     /**

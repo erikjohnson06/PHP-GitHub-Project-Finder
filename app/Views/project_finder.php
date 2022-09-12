@@ -47,7 +47,7 @@
                                     </div>
                                 </div>
                                 <div  class="row">
-                                    <div class="col-12 alert alert-dismissible" id="info-msg-container" role="alert"></div>
+                                    <div class="col-12" id="info-msg-container"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -110,4 +110,3 @@
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
         <!-- ============================================================== -->
-

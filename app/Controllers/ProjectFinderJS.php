@@ -39,6 +39,8 @@ class ProjectFinderJS extends BaseController
             exit();
         }
         
+        $initial_count = $model->getProjectListRecordCount();
+        
         $model->setUserAgent($agent);
         $model->loadGitHubProjects();
         
@@ -51,9 +53,25 @@ class ProjectFinderJS extends BaseController
         
         $data->data->project_data = $model->getProjectList();
         $data->data->last_updated = $model->getLastUpdateTime();
-        
-        $data->data->success_msg = "GitHub Projects updated successfully.";
+                
+        $data->data->success_msg = "GitHub Projects updated successfully. ";
 
+        if ($data->data->project_data){
+            
+            $updated_count = count($data->data->project_data);
+            
+            $diff = ($updated_count - $initial_count);
+            
+            //If this is the initial upload, simply state the number of records found.
+            if (!$initial_count){
+                $data->data->success_msg .= "Uploaded " . $updated_count . " projects.";
+            }
+            //Otherwise, show how many more were added since the last pull. 
+            else if ($diff > 0){
+                $data->data->success_msg .= $diff . " additional projects added.";
+            }
+        }
+        
         echo json_encode($data);
         exit();
     }

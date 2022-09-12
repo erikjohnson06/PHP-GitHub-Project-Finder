@@ -7,6 +7,9 @@ class GitHubApiCurlRequest
     
     /**
      * Default to searching for PHP projects, sorted by the number of stargazers
+     *
+     * Notes on the search syntax: 
+     * https://docs.github.com/en/enterprise-cloud@latest/search-github/getting-started-with-searching-on-github/understanding-the-search-syntax
      * 
      * Examples of query string: q=language:php stars:500..2000 created:2021-01-01..2021-12-31 
      * --> Search for projects written in PHP with between x to y stars created between date x and date y

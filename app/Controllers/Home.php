@@ -9,10 +9,10 @@ class Home extends BaseController
     
     public function index()
     {        
-        return view('templates/head')
-            . view('templates/header')
-            . view('templates/sidebar')
-            . view('project_finder')
-            . view('templates/footer');
+        return view('templates/head') .
+               view('templates/header') .
+               view('templates/sidebar') .
+               view('project_finder') .
+               view('templates/footer');
     }
 }
