@@ -123,7 +123,7 @@ class GitHubApiCurlRequest
                 throw new \Exception("Invalid or missing User Agent.");
             }
                         
-            log_message("error", $this->url . "&per_page=" . $this->per_page . "&page=" . $this->page_number);
+            //log_message("error", $this->url . "&per_page=" . $this->per_page . "&page=" . $this->page_number);
             
             curl_setopt($this->curl, CURLOPT_URL, $this->url . "&per_page=" . $this->per_page . "&page=" . $this->page_number);
             curl_setopt($this->curl, CURLINFO_HEADER_OUT, true);
