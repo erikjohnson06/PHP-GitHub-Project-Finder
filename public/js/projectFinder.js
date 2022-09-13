@@ -61,17 +61,19 @@
                 },
                 dataType : 'json',
                 cache : false,
-                complete : function (a){
+                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                //headers: {'X-Requested-With': 'XMLHttpRequest', "X-CSRF-TOKEN" : self.csrfHash},
+                complete : function (results){
                     
                     self.initialLoadComplete = true;
                     
                     //Update CSRF token
-                    if (a.responseJSON.data.token){
-                        self.csrfHash = a.responseJSON.data.token;
+                    if (typeof results.responseJSON.data.token !== "undefined"){
+                        self.csrfHash = results.responseJSON.data.token;
                     }
                 },
                 success : function (results){
-                                        
+                                                   
                     if (results.error){
                         displayMessage("<i class='fa fa-exclamation-triangle'></i> &nbsp;&nbsp; Error: " + results.error_msg, "error", true);
                         return false;
@@ -125,11 +127,11 @@
                     body.html("<div class='modal_overlay' style='display: block;'><i class='fas fa-spinner fa-spin'></i></div>");
                     modal.modal("show");
                 },
-                complete : function (a, b, c){
+                complete : function (results){
                                         
                     //Update CSRF token
-                    if (a.responseJSON.data.token){
-                        self.csrfHash = a.responseJSON.data.token;
+                    if (typeof results.responseJSON.data.token !== "undefined"){
+                        self.csrfHash = results.responseJSON.data.token;
                     }
                 },
                 success : function (results){
@@ -190,14 +192,14 @@
                 beforeSend: function (){
                     displayMessage("<i class='fas fa-spinner fa-spin'></i> &nbsp;&nbsp; Working.. This may take a few moments.", "info");
                 },
-                complete : function (a, b, c){
-                                        
-                    //Update CSRF token
-                    if (a.responseJSON.data.token){
-                        self.csrfHash = a.responseJSON.data.token;
-                    }
-                    
+                complete : function (results){
+                                     
                     self.loadProcessRunning = false;
+                    
+                    //Update CSRF token
+                    if (typeof results.responseJSON.data.token !== "undefined"){
+                        self.csrfHash = results.responseJSON.data.token;
+                    }                    
                 },
                 success : function (results){
 

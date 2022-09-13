@@ -356,7 +356,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $CSRFTokenName = 'csrf_test_name';
+    public $CSRFTokenName = 'csrf_token_hash';
 
     /**
      * --------------------------------------------------------------------------
@@ -408,7 +408,7 @@ class App extends BaseConfig
      *
      * @var bool
      */
-    public $CSRFRegenerate = true;
+    public $CSRFRegenerate = false;
 
     /**
      * --------------------------------------------------------------------------
@@ -421,7 +421,7 @@ class App extends BaseConfig
      *
      * @var bool
      */
-    public $CSRFRedirect = true;
+    public $CSRFRedirect = false;
 
     /**
      * --------------------------------------------------------------------------

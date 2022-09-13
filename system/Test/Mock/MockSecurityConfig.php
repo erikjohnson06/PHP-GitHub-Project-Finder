@@ -20,11 +20,11 @@ use Config\Security;
  */
 class MockSecurityConfig extends Security
 {
-    public $tokenName   = 'csrf_test_name';
+    public $tokenName   = 'csrf_token_hash';
     public $headerName  = 'X-CSRF-TOKEN';
     public $cookieName  = 'csrf_cookie_name';
     public $expires     = 7200;
-    public $regenerate  = true;
+    public $regenerate  = false;
     public $redirect    = false;
     public $samesite    = 'Lax';
     public $excludeURIs = ['http://example.com'];

@@ -27,7 +27,7 @@ class ProjectFinderJS extends BaseController
         $data = new ReturnPayload();
         $data->data = new \stdClass();
         $data->data->token = csrf_hash(); //Generate new token
-        
+                                
         $model = model(ProjectFinderModel::class);
         
         $agent = $this->request->getServer("HTTP_USER_AGENT"); //Retreive the user agent for the cUrl request
@@ -70,6 +70,9 @@ class ProjectFinderJS extends BaseController
             else if ($diff > 0){
                 $data->data->success_msg .= $diff . " additional projects added.";
             }
+            else if ($diff == 0){
+                $data->data->success_msg .= " No additional projects were found.";
+            }
         }
         
         echo json_encode($data);
@@ -84,7 +87,7 @@ class ProjectFinderJS extends BaseController
         $data = new ReturnPayload();
         $data->data = new \stdClass();
         $data->data->token = csrf_hash(); //Generate new token for subsequent ajax calls. 
-        
+                
         $model = model(ProjectFinderModel::class);
         
         $data->data->project_data = $model->getProjectList();
