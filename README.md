@@ -19,4 +19,6 @@ located at the root directory.
 
 5. To successfully call the GitHub API, please ensure that you have the cURL extension enabled in your php.ini file. 
 
+6. The application should now load by navigating to http://localhost/project_finder in your browser. 
+
 Please contact me if you have questions, or need assistance!
