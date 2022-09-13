@@ -124,7 +124,7 @@ class ProjectFinderModel extends Model
 
             $row = $results->getRow();
                         
-            $data = new GitHubRepositoryRecord();
+            $data = new GitHubRepositoryRecordDetail();
             $data->repository_id = (int) $row->repository_id;
             $data->name = utf8_decode(htmlentities($row->name, ENT_QUOTES));
             $data->description = utf8_decode(htmlentities($row->description, ENT_QUOTES));
